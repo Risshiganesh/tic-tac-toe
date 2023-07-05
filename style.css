@@ -1,7 +1,14 @@
+:root {
+
+    --board-size: clamp(300px,100%, 450px);
+
+}
+
 *{
 
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 
 }
 
@@ -11,15 +18,168 @@ body {
 
     width: 100%;
     height: 100%;
+    position: relative;
     
-}   
+}  
 
 
+.start-container {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: grey;
+
+    display: grid;
+   
+    justify-items: center;
+    align-items: center;
+
+
+     display: none;
+}
+
+.start-menu {
+    border: 1px solid cyan;
+    position: fixed;
+    height: 400px;
+    width: clamp(300px,100%,650px);
+    background-color: grey;
+    /* display: none; */
+}
+
+.form-container {
+    display: grid;
+    /* grid-template-columns: 1fr;
+
+    grid-template: 
+    "grid-size"
+    "players"; */
+}
+
+.grid-size {
+
+    /* grid-area: grid-size; */
+
+    justify-self: center;
+
+
+}
+
+
+.players {
+
+    /* grid-area: players; */
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+
+    grid-template-rows: repeat(auto-fit, minmax(50px,70px));
+    border: 1px solid burlywood;
+
+    justify-items: center;
+
+    padding-top: 50px;
+    width: 100%;
+    height: 300px;
+    
+
+
+
+}
+
+.player-one {
+
+    border: 1px solid goldenrod;
+
+    height: 50px;
+
+    width: 300px;
+
+    display: grid;
+
+    justify-items: center;
+
+    /* grid-area: player-one; */
+
+}
+
+.player-two {
+    border: 1px solid lightskyblue;
+    /* grid-area: player-two; */
+    height: 50px;
+    width: 300px;
+
+    display: grid;
+
+    justify-items: center;
+
+}
+
+
+
+
+.parent-container{
+    border: 1px solid yellow;
+    width: 100%;
+    height: 100%;
+}
 
 .main-container {
 
-    background-color: pink;
+    background-color: black;
     width: 100%;
     height: 100%;
+    border: 1px solid red;
 
 }
+
+.status-container{
+
+    border: 1px solid blue;
+    width: 100%;
+    height: 20%;
+}
+
+.board-container{
+
+    border: 1px solid purple;
+    width: 100%;
+    height: 60%;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+
+}
+
+.turn-container{
+
+    border: 1px solid green;
+    width: 100%;
+    height: 20%;
+
+}
+
+.board {
+
+    width:  300px;
+    height: 300px;
+    border: 1px solid orange;
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr;
+
+}
+
+.grid {
+
+    width: 100px;
+    height: 100px;
+    border: 1px solid greenyellow;
+    color: white;
+    font-size: 100px;
+
+}
+
+
+
