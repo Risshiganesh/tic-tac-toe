@@ -133,7 +133,7 @@ const gameFlow = (function () {
             if(!gameWon) {
 
     
-            displayController.updateStatus(name+" has played");
+            // displayController.updateStatus(name+" has played");
 
             let gameBoardArray = gameBoard.board;
 
@@ -426,36 +426,37 @@ const displayController = (function(gameBoardPlaceholder){
     let player1turn = true;
 
 
+    const startButton = document.querySelector('#start-button');
+
+    const startMenuScreen = document.querySelector('.start-container')
+
+    const gridAreaDOM = document.querySelector('#grid-area');
+
+    const player1DOM = document.querySelector('#player-one-input');
+
+    const player2DOM = document.querySelector('#player-two-input');
+
+    const playerOneNameDOM = document.querySelector('.player-one-name');
+
+    const playerTwoNameDOM = document.querySelector('.player-two-name');
+
+    const playerOneturnContainer = document.querySelector('.player-one-container');
+    
+    const playerTwoturnContainer = document.querySelector('.player-two-container');
+
+
+
+
+
     // when you click the start button
 
     function startGame (){
 
-        const startButton = document.querySelector('#start-button');
-
-        const startMenuScreen = document.querySelector('.start-container')
+        
 
 
         startButton.addEventListener('click', function(e){
 
-            const gridAreaDOM = document.querySelector('#grid-area');
-
-
-            const player1DOM = document.querySelector('#player-one-input');
-
-
-            const player2DOM = document.querySelector('#player-two-input');
-
-
-            
-
-
-            const playerOneNameDOM = document.querySelector('.player-one-name');
-
-
-            const playerTwoNameDOM = document.querySelector('.player-two-name');
-
-
-            
 
             const gridAreaValue = gridAreaDOM.value;
             
@@ -562,12 +563,7 @@ const displayController = (function(gameBoardPlaceholder){
 
 
     const updateTurnColor = (function () {
-
-        const playerOneturnContainer = document.querySelector('.player-one-container');
-    
-        const playerTwoturnContainer = document.querySelector('.player-two-container');
-    
-    
+     
         const changeTurnOnDOM = function () {
     
             if(player1turn === false){
@@ -575,6 +571,8 @@ const displayController = (function(gameBoardPlaceholder){
                 playerTwoturnContainer.classList.remove('your-turn');
         
                 playerOneturnContainer.classList.add('your-turn');
+
+                updateStatus(playerOneNameDOM.textContent+'\'s turn!')
         
             }
         
@@ -583,6 +581,8 @@ const displayController = (function(gameBoardPlaceholder){
                 playerOneturnContainer.classList.remove('your-turn');
         
                 playerTwoturnContainer.classList.add('your-turn');
+
+                updateStatus(playerTwoNameDOM.textContent+'\'s turn!')
         
             }
     
@@ -590,9 +590,7 @@ const displayController = (function(gameBoardPlaceholder){
         }
     
     
-        return {changeTurnOnDOM}
-    
-    
+        return {changeTurnOnDOM};
         
     })();
 
@@ -631,10 +629,6 @@ const displayController = (function(gameBoardPlaceholder){
     
     function removeTurnColor () {
 
-        const playerOneturnContainer = document.querySelector('.player-one-container');
-    
-        const playerTwoturnContainer = document.querySelector('.player-two-container');
-    
         playerOneturnContainer.classList.remove('your-turn');
     
         playerTwoturnContainer.classList.remove('your-turn');
