@@ -6,23 +6,22 @@ let gridNumber = 3; //put this in a module later, this is player input
 
 
 // put this inside a module
-
-
-
-
-
 //factory function
-const gameBoard = (function(gridNumberPlaceholder){
+const gameBoardFactory = function(gridNumberPlaceholder){
 
+
+    console.log('create new board')
 
     let board = [];
+
+    console.log(board);
 
     for (let r = 0; r < gridNumberPlaceholder; r++) {
 
         for (let c = 0; c < gridNumberPlaceholder; c++)
         
 
-        board.push(createGrid(r,c,'.'));
+        board.push(createGrid(r,c,' '));
 
             
     }    
@@ -38,7 +37,11 @@ const gameBoard = (function(gridNumberPlaceholder){
 
 return {board};
 
-})(gridNumber);
+};
+
+
+
+let gameBoard = gameBoardFactory(gridNumber);
 
 
 // module
@@ -93,9 +96,24 @@ consoleDisplay(gameBoard);
 
 
 
+// Put these inside displayController and let it be accessed as a displayController method
+function updateStatus(message) {
+    const statusDisplayDOM = document.querySelector('.status-display');
+
+    statusDisplayDOM.textContent = message
+
+}
+
+
+let player1turn = true; // gameFlow.p depends on this, find a way to send this value to it, without keeping this variable in global namespace. Ideally should be inside updateTurnColor
 
 
 
+
+
+
+
+let gameWon = false;
 
 
 // COMPLETE THE FLOW AND MODULARISE EVERYTHING
@@ -104,89 +122,43 @@ consoleDisplay(gameBoard);
 const gameFlow = (function () {
     
     // first create players
-    let player1turn = true;
+    
+
+    
+
+    
+    let statusDisplay = 'START!';
+
 
     const players = function (name,marker){
 
-        // may have to modify this to add marker without row and col
-        // const choice = function(row,col){
-    
-        //     console.log(name+" plays")
-    
-        //     let chosenGrid = '';
-        
-        //     gameBoard.board.forEach(grid => {
-    
-        //         // Only add the marker to the grid that was chosen
-                
-        //         if (grid.row === row && grid.col === col){
-                    
-        //             chosenGrid = grid;
-                
-        //         }
-        
-        //     });
-        
-        //     if(!(chosenGrid.marker === 'x'|| chosenGrid.marker === 'o')) {
-        
-                
-        //         chosenGrid.marker = marker;
-    
-        //         player1turn = player1turn === false ? true : false;
-        
-        //         consoleDisplay(gameBoard);
-        
-        //     }else{
-        //         console.log('that grid is taken!');
-        //     }
-        
-        //     gridCheck(gameBoard,this);
-    
-        //     // 'this' refers to this object
-        //     // console.log(this);
-    
-            
-        
-        // }
 
 
         const choice = function(nodeNumber){
-    
-            console.log(name+" plays")
-    
+
             
-        
+            
+
+            if(!gameWon) {
+
+    
+            updateStatus(name+" has played");
 
             let gameBoardArray = gameBoard.board;
 
-            let chosenGrid = gameBoardArray[nodeNumber];
-
-
-            // gameBoard.board.forEach(grid => {
-    
-            //     // Only add the marker to the grid that was chosen
-                
-            //     if (grid.row === row && grid.col === col){
-                    
-            //         chosenGrid = grid;
-                
-            //     }
-        
-            // });
-
-            
+            let chosenGrid = gameBoardArray[nodeNumber];      
         
             if(!(chosenGrid.marker === 'x'|| chosenGrid.marker === 'o')) {
-        
+                
+                // changes turn color on DOM
+                displayController.updateTurnColor.changeTurnOnDOM();
                 
                 chosenGrid.marker = marker;
     
-                player1turn = player1turn === false ? true : false;
-        
                 consoleDisplay(gameBoard);
         
             }else{
-                console.log('that grid is taken!');
+                updateStatus('That grid is taken!');
             }
         
             gridCheck(gameBoard,this);
@@ -194,51 +166,59 @@ const gameFlow = (function () {
             // 'this' refers to this object
             // console.log(this);
     
-            
+            }else{
+                console.log('Game is over!')
+            }
         
+            return {statusDisplay};
         }
 
-
-
-
-
-    
         return {name,choice,marker};
     
     };
 
-    // change this with a form input later
-    // let player1Name = prompt('Input player 1 name','') || 'Player 1';
 
-    // let player2Name = prompt('Input player 2 name','') || 'Player 2';
+    // This is where players are created
 
-
+    let playerArray = [];
 
 
+    function defaultPlayers(){
 
-    const player1= players('player1Name','x');
+        const player1Default= players('Player 1','x');
 
+        const player2Default = players('Player 2','o');
 
+        playerArray.push(player1Default,player2Default)
 
-
-    const player2 = players('player2Name','o');
-
-
-
-
-    
-
-    // console.log(choice1);
-
-    // player1.choice(2,0);
-
-    // player1.choice(1,1);
-
-    // player1.choice(0,2);
-
-    // player2.choice(0,0);
+    }
 
 
+    defaultPlayers();
+
+    let player1= playerArray[0];
+
+    let player2 = playerArray[1];
+
+
+    const createPlayers = function (player1Name,player2Name){
+
+        playerArray = [];
+
+        const newPlayer1 = players(player1Name,'x');
+
+        const newPlayer2 = players(player2Name,'o')
+
+        playerArray.push(newPlayer1,newPlayer2);
+
+        player1 = playerArray[0];
+
+        player2 = playerArray[1];
+
+        return;
+
+
+    }
 
     function gridCheck(gameBoard,player1){
         const boardArray = gameBoard.board;
@@ -264,12 +244,7 @@ const gameFlow = (function () {
         
             });
     
-            
-    
-    
             markerCheck(gridArray,player1);
-    
-            // markerCheck(gridArray,player2);
     
     
         // Column check
@@ -295,15 +270,7 @@ const gameFlow = (function () {
     
             markerCheck(gridArray,player1);
     
-            // markerCheck(gridArray,player2);
-    
-            
-            // gridArray = [];
-    
         }
-    
-    
-    
     
         function descendingLineCheck () {
     
@@ -320,26 +287,17 @@ const gameFlow = (function () {
                         gridArray.push(grid);
                     }
                 });
-    
-                
                 
             }
     
-            // console.log(gridArray);
-    
             markerCheck(gridArray,player1);
-    
-            // markerCheck(gridArray,player2);
     
             gridArray =[];
     
         }
     
         descendingLineCheck();
-    
-    
-        // console.log(descendingLineArray);
-    
+
     
     
         function ascendingLineCheck () {
@@ -365,25 +323,23 @@ const gameFlow = (function () {
     
                 
             }
-    
-    
-            // console.log(gridArray);
-    
-            // console.log(ascendingGridArray);
-    
-            // console.log(gridNumber);
-    
+
             markerCheck(gridArray,player1);
     
-            // markerCheck(gridArray,player2);
-        
+            
     
         }
     
         ascendingLineCheck();
     
+
+        if(!gameWon){
+
+            drawCheck(boardArray);
+
+        }
     
-        drawCheck(boardArray);
+        
 
     
         
@@ -408,7 +364,11 @@ const gameFlow = (function () {
     
         if (gridArrayPlaceholder.length === markerCheck.length) {
     
-            console.log(player.name+' wins!');
+            updateStatus(player.name+' wins!');
+
+            removeTurnColor();
+
+            gameWon = true;
     
             return;
     
@@ -425,16 +385,17 @@ const gameFlow = (function () {
     
     
     // module
-    
     function drawCheck (boardArrayPlaceholder) {
     
         let gridArray = [];
     
         boardArrayPlaceholder.forEach(grid => {
             
-            if(grid.marker === '.' || (!grid.marker)){
+            if(grid.marker === ' '){
     
                 gridArray.push(grid);
+
+                console.log(grid.marker);
     
                 
                 // return;
@@ -445,15 +406,17 @@ const gameFlow = (function () {
     
         if(gridArray.length === 0){
     
-            console.log('Game is a draw!');
+            updateStatus('Game is a draw!');
+
+            removeTurnColor();
     
         }
     
     }
 
-    let p = function(row, col){
+    let p = function(nodeNumber){
 
-        let test = player1turn? player1.choice(row,col):player2.choice(row,col);
+        let test = player1turn? player1.choice(nodeNumber):player2.choice(nodeNumber);
     
         return test;
     
@@ -462,24 +425,95 @@ const gameFlow = (function () {
     
     
     // methods that are available
-    return {p};
+    return {p,createPlayers};
 
 })();
 
 
 
-// console.log(gameFlow.choice1);
-
-// 
-
-
-
-// this returns choices, not player object
-
-
 
 // module for DOM
 const displayController = (function(gameBoardPlaceholder){
+
+
+    // when you click the start button
+
+    function startGame (){
+
+        const startButton = document.querySelector('#start-button');
+
+        const startMenuScreen = document.querySelector('.start-container')
+
+
+        startButton.addEventListener('click', function(e){
+
+            const gridAreaDOM = document.querySelector('#grid-area');
+
+
+            const player1DOM = document.querySelector('#player-one-input');
+
+
+            const player2DOM = document.querySelector('#player-two-input');
+
+
+            
+
+
+            const playerOneNameDOM = document.querySelector('.player-one-name');
+
+
+            const playerTwoNameDOM = document.querySelector('.player-two-name');
+
+
+            
+
+            const gridAreaValue = gridAreaDOM.value;
+            
+            const player1NameValue = player1DOM.value;
+            
+            const player2NameValue = player2DOM.value;
+
+            console.log(gridAreaValue);
+
+            console.log(player1NameValue);
+
+            console.log(player2NameValue);
+
+            if(!gridAreaValue||!player1NameValue|| !player2NameValue){
+
+                console.log('test')
+
+                return;
+
+            }
+
+            e.preventDefault();
+            
+
+            // Create grid
+            
+            // CREATE PLAYERS or change player name?
+
+            gameFlow.createPlayers(player1NameValue,player2NameValue);
+
+            startMenuScreen.classList.add('game-start');
+
+            
+          
+
+            playerOneNameDOM.textContent = player1DOM.value;
+
+            playerTwoNameDOM.textContent = player2DOM.value;
+
+
+        });
+
+
+    }
+
+
+    // Gameboard display
+
 
     const gameBoardArray = gameBoardPlaceholder.board;
 
@@ -497,7 +531,6 @@ const displayController = (function(gameBoardPlaceholder){
 
     });
 
-
     const gridDOM = document.querySelectorAll('.grid');
 
 
@@ -509,8 +542,6 @@ const displayController = (function(gameBoardPlaceholder){
     }
 
     
-
-
     gridDOM.forEach(grid => {
         
         grid.addEventListener('click', function(){
@@ -525,8 +556,119 @@ const displayController = (function(gameBoardPlaceholder){
 
             console.log(clickedGrid);
 
+            const statusDisplayDOM = document.querySelector('.status-display')
+
+
+            console.log("TEST");
+            console.log(gameFlow.statusDisplay);
+
+       
+
+
+
         })
     });
 
 
+
+    const updateTurnColor = (function () {
+
+        const playerOneturnContainer = document.querySelector('.player-one-container');
+    
+        const playerTwoturnContainer = document.querySelector('.player-two-container');
+    
+    
+        const changeTurnOnDOM = function () {
+    
+            if(player1turn === false){
+    
+                playerTwoturnContainer.classList.remove('your-turn');
+        
+                playerOneturnContainer.classList.add('your-turn');
+        
+            }
+        
+            if(player1turn === true){
+        
+                playerOneturnContainer.classList.remove('your-turn');
+        
+                playerTwoturnContainer.classList.add('your-turn');
+        
+            }
+    
+            player1turn = player1turn === false ? true : false;
+        }
+    
+    
+        return {changeTurnOnDOM}
+    
+    
+        
+    })();
+
+    startGame();
+
+
+    return {updateTurnColor}
+
+
 })(gameBoard);
+
+
+
+
+
+
+function restartGame (){
+
+    const restartButtonDOM = document.querySelector('.restart-button');
+
+    restartButtonDOM.addEventListener('click', function(){
+        
+        gameBoard = gameBoardFactory(gridNumber);
+
+        player1turn = true;
+
+        gameWon = false;
+
+
+
+        // Need to clear DOM Grid and Status display textContent and also reset gameWon value to false. turn gameWon to a function expression?
+
+        const gridDOM = document.querySelectorAll('.grid');
+
+        gridDOM.forEach(grid => {
+            grid.textContent = '';
+        })
+
+        const statusDisplayDOM = document.querySelector('.status-display');
+
+        statusDisplayDOM.textContent = 'START!';
+
+        
+        
+    })
+
+
+
+
+
+
+}
+
+restartGame();
+
+
+function removeTurnColor () {
+
+    const playerOneturnContainer = document.querySelector('.player-one-container');
+
+    const playerTwoturnContainer = document.querySelector('.player-two-container');
+
+    playerOneturnContainer.classList.remove('your-turn');
+
+    playerTwoturnContainer.classList.remove('your-turn');
+
+}
+
+        

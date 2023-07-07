@@ -13,29 +13,31 @@
             <form action="">
                 <div class="form-container">
                     <div class="grid-size">
-                        <label for="">Grid size</label>
-                        <input type="number" placeholder="Input name here" required>
+                        <label for="grid-area">Grid size</label>
+                        <input id="grid-area" type="number" value="3" min="3" max="9">
                     </div>
     
                     <div class="players">
 
                         <div class="player-one">
-                            <label for="">Player 1 (X):</label>
+                            <label for="player-one-input">Player 1 (X):</label>
                             
-                            <input type="text" placeholder="Input name here" required>
+                            <input id="player-one-input" type="text" placeholder="Input name here" value="Player 1" required>
                         </div>
                         
         
                         <div class="player-two">
-                            <label for="">Player 2 (O):</label>
+                            <label for="player-two-input">Player 2 (O):</label>
                             
-                            <input type="text" placeholder="Input name here" required>
+                            <input id="player-two-input" type="text" placeholder="Input name here" value="Player 2" required>
                         </div>
 
                     </div>
                    
+                    <div class="button-container">
+                        <button id="start-button" type="submit">START</button>
+                    </div>
                     
-                    <button type="submit">START</button>
                 </div>
                 
                 
@@ -51,6 +53,11 @@
         <div class="main-container">
             <div class="status-container">
 
+                <div class="status-display">START!</div>
+                <div class="restart-button">
+                    <button class="restart">RESTART</button>
+                </div>
+
             </div>
             <div class="board-container">
 
@@ -59,14 +66,34 @@
                 </div>
 
             </div>
-            <div class="turn-container">
 
+
+
+            <div class="turn-container">
+                <div class="player-one-container">
+                    <div class="player-one-name">
+
+                    </div>
+                    <div class="player-one-symbol">X</div>
+                </div>
+                <div class="player-two-container">
+                    <div class="player-two-name">
+
+                    </div>
+                    <div class="player-two-symbol">O</div>
+                </div>
             </div>
 
         </div>
         
 
 
+    </div>
+
+    <div class="game-over-container">
+        <div class="game-over-contents">
+
+        </div>
     </div>
     
 </body>

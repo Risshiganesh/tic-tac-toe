@@ -27,15 +27,20 @@ body {
     position: fixed;
     height: 100%;
     width: 100%;
-    background-color: grey;
+    background-color: rgba(128, 128, 128, 0.507);
 
     display: grid;
    
     justify-items: center;
     align-items: center;
 
+    /*Comment this later*/
+    /* display: none; */
+}
 
-     display: none;
+
+.game-start {
+    display: none;
 }
 
 .start-menu {
@@ -43,8 +48,10 @@ body {
     position: fixed;
     height: 400px;
     width: clamp(300px,100%,650px);
-    background-color: grey;
+    background-color: orange;
     /* display: none; */
+    border-radius: 15px;
+    justify-items: center;
 }
 
 .form-container {
@@ -59,12 +66,24 @@ body {
 .grid-size {
 
     /* grid-area: grid-size; */
+    display: grid;
 
     justify-self: center;
+    justify-items: center;
+    padding: 20px;
 
+    font-size: 30px;
 
 }
 
+.grid-size > input {
+
+    font-size: 20px;
+    width: 40px;
+    text-align: center;
+    border-radius: 15px;
+
+}
 
 .players {
 
@@ -81,11 +100,21 @@ body {
 
     padding-top: 50px;
     width: 100%;
-    height: 300px;
+    height: 200px;
     
 
 
 
+}
+
+.players > div > input {
+    appearance: none;
+    width: 250px;
+    height: 30px;
+    border-radius: 15px;
+    border: 1px solid gray;
+    padding-left: 15px;
+    font-size: 25px;
 }
 
 .player-one {
@@ -119,6 +148,18 @@ body {
 
 
 
+
+.button-container,
+.button-container > button {
+    width: 150px;
+    height: 50px;
+    justify-self: center;
+    border-radius: 15px;
+}
+
+
+
+
 .parent-container{
     border: 1px solid yellow;
     width: 100%;
@@ -138,14 +179,36 @@ body {
 
     border: 1px solid blue;
     width: 100%;
-    height: 20%;
+    height: 200px;
+}
+
+.status-display {
+    height: 50%;
+    border: 1px solid yellow;
+    color: white;
+    text-align: center;
+    font-size: 30px;
+}
+
+.restart-button {
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+    height: 50%;
+    padding-top: 30px;
+}
+
+.restart {
+    width: 120px;
+    height: 50px;
+    border-radius: 15px;
 }
 
 .board-container{
 
     border: 1px solid purple;
     width: 100%;
-    height: 60%;
+    height: clamp(320px,100%,550px);
     display: grid;
     justify-items: center;
     align-items: center;
@@ -158,7 +221,66 @@ body {
     width: 100%;
     height: 20%;
 
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+    padding-top: 30px;
+
+    /* grid-template: "player-one-container player-two-container"; */
+
 }
+
+.player-one-container {
+
+    /* grid-area: player-one-container; */
+    
+
+}
+
+.player-two-container {
+
+    /* grid-area: player-two-container; */
+
+}
+
+
+.player-one-container,
+.player-two-container {
+
+    display: grid;
+
+    width: 100%;
+    justify-items: center;
+    border: 1px solid red;
+
+}
+
+.your-turn {
+
+    background-color: greenyellow;
+
+}
+
+.player-one-name,
+.player-two-name {
+    color: aquamarine;
+    border: 1px solid white;
+    font-size: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    /* width: 50px; */
+}
+
+.player-one-symbol,
+.player-two-symbol {
+    color: white;
+    border: 1px solid white;
+    font-size: 70px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    padding-top: 20px;
+    /* width: 50px; */
+}
+
 
 .board {
 
@@ -173,11 +295,19 @@ body {
 
 .grid {
 
+    display: grid;
     width: 100px;
     height: 100px;
+    /* Messes with the text spacing */
+    line-height: 70px;
+    justify-content: center;
     border: 1px solid greenyellow;
     color: white;
     font-size: 100px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    /* font-weight: bold; */
+    /* padding-bottom: 100px; */
 
 }
 
