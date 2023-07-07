@@ -1,7 +1,9 @@
 //This is basically object manipulation
 
 // Put inside a module and send it to
-let gridNumber = 3; //put this in a module later, this is player input
+
+
+// let player1turn = true; // gameFlow.p depends on this, find a way to send this value to it, without keeping this variable in global namespace. Ideally should be inside updateTurnColor
 
 
 
@@ -39,7 +41,7 @@ return {board};
 
 };
 
-
+let gridNumber = 3; //put this in a module later
 
 let gameBoard = gameBoardFactory(gridNumber);
 
@@ -50,8 +52,6 @@ function consoleDisplay (boardObj){
     const boardArray = boardObj.board;
 
     let unprocessedArray = [];
-
-    let consoleDisplayArray = [];
 
     // loop count variables, value will be max col and row value
     let colCount = '';
@@ -96,24 +96,8 @@ consoleDisplay(gameBoard);
 
 
 
-// Put these inside displayController and let it be accessed as a displayController method
-function updateStatus(message) {
-    const statusDisplayDOM = document.querySelector('.status-display');
-
-    statusDisplayDOM.textContent = message
-
-}
 
 
-let player1turn = true; // gameFlow.p depends on this, find a way to send this value to it, without keeping this variable in global namespace. Ideally should be inside updateTurnColor
-
-
-
-
-
-
-
-let gameWon = false;
 
 
 // COMPLETE THE FLOW AND MODULARISE EVERYTHING
@@ -124,7 +108,14 @@ const gameFlow = (function () {
     // first create players
     
 
-    
+    let gameWon = false;
+
+
+    const resetGameOver = function(){
+        
+        gameWon = false;
+
+    }
 
     
     let statusDisplay = 'START!';
@@ -142,7 +133,7 @@ const gameFlow = (function () {
             if(!gameWon) {
 
     
-            updateStatus(name+" has played");
+            displayController.updateStatus(name+" has played");
 
             let gameBoardArray = gameBoard.board;
 
@@ -158,7 +149,7 @@ const gameFlow = (function () {
                 consoleDisplay(gameBoard);
         
             }else{
-                updateStatus('That grid is taken!');
+                displayController.updateStatus('That grid is taken!');
             }
         
             gridCheck(gameBoard,this);
@@ -340,9 +331,6 @@ const gameFlow = (function () {
         }
     
         
-
-    
-        
     }
     
     
@@ -364,9 +352,9 @@ const gameFlow = (function () {
     
         if (gridArrayPlaceholder.length === markerCheck.length) {
     
-            updateStatus(player.name+' wins!');
+            displayController.updateStatus(player.name+' wins!');
 
-            removeTurnColor();
+            displayController.removeTurnColor();
 
             gameWon = true;
     
@@ -406,17 +394,17 @@ const gameFlow = (function () {
     
         if(gridArray.length === 0){
     
-            updateStatus('Game is a draw!');
+            displayController.updateStatus('Game is a draw!');
 
-            removeTurnColor();
+            displayController.removeTurnColor();
     
         }
     
     }
 
-    let p = function(nodeNumber){
+    let p = function(playerTurn,nodeNumber){
 
-        let test = player1turn? player1.choice(nodeNumber):player2.choice(nodeNumber);
+        let test = playerTurn? player1.choice(nodeNumber):player2.choice(nodeNumber);
     
         return test;
     
@@ -425,7 +413,7 @@ const gameFlow = (function () {
     
     
     // methods that are available
-    return {p,createPlayers};
+    return {p,createPlayers,resetGameOver};
 
 })();
 
@@ -434,6 +422,8 @@ const gameFlow = (function () {
 
 // module for DOM
 const displayController = (function(gameBoardPlaceholder){
+
+    let player1turn = true;
 
 
     // when you click the start button
@@ -550,7 +540,7 @@ const displayController = (function(gameBoardPlaceholder){
             
             const clickedGrid = grid.dataset.grid;
 
-            gameFlow.p(clickedGrid);
+            gameFlow.p(player1turn,clickedGrid);
 
             grid.textContent = gameBoardArray[clickedGrid].marker;
 
@@ -606,10 +596,72 @@ const displayController = (function(gameBoardPlaceholder){
         
     })();
 
+    function restartGame (){
+
+        const restartButtonDOM = document.querySelector('.restart-button');
+    
+        restartButtonDOM.addEventListener('click', function(){
+            
+            // the tricky part
+            gameBoard = gameBoardFactory(gridNumber);
+            // the tricky part
+    
+            player1turn = true;
+    
+            gameFlow.resetGameOver();
+    
+            // Need to clear DOM Grid and Status display textContent and also reset gameWon value to false. turn gameWon to a function expression?
+    
+            const gridDOM = document.querySelectorAll('.grid');
+    
+            gridDOM.forEach(grid => {
+                grid.textContent = '';
+            })
+    
+            const statusDisplayDOM = document.querySelector('.status-display');
+    
+            statusDisplayDOM.textContent = 'START!';
+    
+            
+            
+        });
+    
+    
+    }
+    
+    function removeTurnColor () {
+
+        const playerOneturnContainer = document.querySelector('.player-one-container');
+    
+        const playerTwoturnContainer = document.querySelector('.player-two-container');
+    
+        playerOneturnContainer.classList.remove('your-turn');
+    
+        playerTwoturnContainer.classList.remove('your-turn');
+    
+    }
+
+    
+
+    function updateStatus(message) {
+        const statusDisplayDOM = document.querySelector('.status-display');
+    
+        statusDisplayDOM.textContent = message
+    
+    }
+    
+
+
+
+
+
+
+    restartGame();
+
     startGame();
 
 
-    return {updateTurnColor}
+    return {updateTurnColor,removeTurnColor,updateStatus};
 
 
 })(gameBoard);
@@ -619,56 +671,8 @@ const displayController = (function(gameBoardPlaceholder){
 
 
 
-function restartGame (){
-
-    const restartButtonDOM = document.querySelector('.restart-button');
-
-    restartButtonDOM.addEventListener('click', function(){
-        
-        gameBoard = gameBoardFactory(gridNumber);
-
-        player1turn = true;
-
-        gameWon = false;
 
 
 
-        // Need to clear DOM Grid and Status display textContent and also reset gameWon value to false. turn gameWon to a function expression?
-
-        const gridDOM = document.querySelectorAll('.grid');
-
-        gridDOM.forEach(grid => {
-            grid.textContent = '';
-        })
-
-        const statusDisplayDOM = document.querySelector('.status-display');
-
-        statusDisplayDOM.textContent = 'START!';
-
-        
-        
-    })
-
-
-
-
-
-
-}
-
-restartGame();
-
-
-function removeTurnColor () {
-
-    const playerOneturnContainer = document.querySelector('.player-one-container');
-
-    const playerTwoturnContainer = document.querySelector('.player-two-container');
-
-    playerOneturnContainer.classList.remove('your-turn');
-
-    playerTwoturnContainer.classList.remove('your-turn');
-
-}
 
         
