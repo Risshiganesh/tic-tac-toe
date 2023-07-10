@@ -582,7 +582,7 @@ const displayController = (function(gameBoardPlaceholder){
         
                 playerOneturnContainer.classList.add('your-turn');
 
-                updateStatus(playerOneNameDOM.textContent+'\'s turn!')
+                updateStatus(player1DOM.value+'\'s turn!')
         
             }
         
@@ -592,7 +592,7 @@ const displayController = (function(gameBoardPlaceholder){
         
                 playerTwoturnContainer.classList.add('your-turn');
 
-                updateStatus(playerTwoNameDOM.textContent+'\'s turn!')
+                updateStatus(player2DOM.value+'\'s turn!')
         
             }
     
