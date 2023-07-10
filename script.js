@@ -142,7 +142,7 @@ const gameFlow = (function () {
 
             let chosenGrid = gameBoardArray[nodeNumber];      
         
-            if(!(chosenGrid.marker === 'x'|| chosenGrid.marker === 'o')) {
+            if(!(chosenGrid.marker === 'X'|| chosenGrid.marker === 'O')) {
                 
                 // changes turn color on DOM
                 displayController.updateTurnColor.changeTurnOnDOM();
@@ -181,9 +181,9 @@ const gameFlow = (function () {
 
     function defaultPlayers(){
 
-        const player1Default= players('Player 1','x');
+        const player1Default= players('Player 1','X');
 
-        const player2Default = players('Player 2','o');
+        const player2Default = players('Player 2','O');
 
         playerArray.push(player1Default,player2Default)
 
@@ -201,9 +201,9 @@ const gameFlow = (function () {
 
         playerArray = [];
 
-        const newPlayer1 = players(player1Name,'x');
+        const newPlayer1 = players(player1Name,'X');
 
-        const newPlayer2 = players(player2Name,'o')
+        const newPlayer2 = players(player2Name,'O')
 
         playerArray.push(newPlayer1,newPlayer2);
 
