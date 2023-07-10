@@ -9,7 +9,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
+/* Remove this later */
     font-family: Commissioner, Arial, Helvetica, sans-serif;
 
 }
@@ -240,7 +240,7 @@ video {
 
     grid-area: status-container;
 
-    grid-template-columns: minmax(150px,1fr) 2fr minmax(150px,1fr);
+    grid-template-columns: minmax(100px,1fr) minmax(150px,2fr) minmax(100px,1fr);
 
     grid-template-areas: "left-status center-status right-status";
 
@@ -263,11 +263,11 @@ video {
 
 
 .status-display {
-    height: 100%;
+    height: 70%;
     /* border: 1px solid yellow; */
     color: white;
     text-align: center;
-    font-size: 30px;
+    font-size: 16px;
     padding-top: 20px;
     font-family: Arial, Helvetica, sans-serif;
     border-radius: 20px;
@@ -411,7 +411,7 @@ video {
 .player-two-name {
     /* color: aquamarine; */
     /* border: 1px solid white; */
-    font-size: 30px;
+    font-size: 20px;
     font-family: Arial, Helvetica, sans-serif;
     /* width: 50px; */
     text-align: center;
@@ -422,7 +422,7 @@ video {
 .player-two-score {
     /* color: white; */
     /* border: 1px solid white; */
-    font-size: 70px;
+    font-size: 50px;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     padding-top: 20px;
