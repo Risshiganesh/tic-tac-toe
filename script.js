@@ -123,10 +123,13 @@ const gameFlow = (function () {
 
     const players = function (name,marker){
 
+        let score = 0;
+
 
 
         const choice = function(nodeNumber){
 
+            console.log(this);
             
             
 
@@ -160,11 +163,13 @@ const gameFlow = (function () {
             }else{
                 console.log('Game is over!')
             }
+
+            displayController.updateScore(playerArray[0].score,playerArray[1].score);
         
             return {statusDisplay};
         }
 
-        return {name,choice,marker};
+        return {name,choice,marker,score};
     
     };
 
@@ -244,7 +249,7 @@ const gameFlow = (function () {
             gridArray = [];
     
     
-            console.log(player1);
+            // console.log(player1);
             
     
             boardArray.forEach(grid => {
@@ -354,6 +359,8 @@ const gameFlow = (function () {
     
             displayController.updateStatus(player.name+' wins!');
 
+            player.score++;
+
             displayController.removeTurnColor();
 
             gameWon = true;
@@ -383,7 +390,7 @@ const gameFlow = (function () {
     
                 gridArray.push(grid);
 
-                console.log(grid.marker);
+                // console.log(grid.marker);
     
                 
                 // return;
@@ -409,6 +416,9 @@ const gameFlow = (function () {
         return test;
     
     }
+
+
+    
 
     
     
@@ -458,21 +468,21 @@ const displayController = (function(gameBoardPlaceholder){
         startButton.addEventListener('click', function(e){
 
 
-            const gridAreaValue = gridAreaDOM.value;
+            // const gridAreaValue = gridAreaDOM.value;
             
             const player1NameValue = player1DOM.value;
             
             const player2NameValue = player2DOM.value;
 
-            console.log(gridAreaValue);
+            // console.log(gridAreaValue);
 
-            console.log(player1NameValue);
+            // console.log(player1NameValue);
 
-            console.log(player2NameValue);
+            // console.log(player2NameValue);
 
-            if(!gridAreaValue||!player1NameValue|| !player2NameValue){
+            if(!player1NameValue|| !player2NameValue){
 
-                console.log('test')
+                // console.log('test')
 
                 return;
 
@@ -545,12 +555,12 @@ const displayController = (function(gameBoardPlaceholder){
 
             grid.textContent = gameBoardArray[clickedGrid].marker;
 
-            console.log(clickedGrid);
+            // console.log(clickedGrid);
 
             const statusDisplayDOM = document.querySelector('.status-display')
 
 
-            console.log("TEST");
+            // console.log("TEST");
             console.log(gameFlow.statusDisplay);
 
        
@@ -620,6 +630,11 @@ const displayController = (function(gameBoardPlaceholder){
     
             statusDisplayDOM.textContent = 'START!';
     
+            removeTurnColor();
+
+            playerOneturnContainer.classList.add('your-turn');
+
+            // add color class to player-one-container
             
             
         });
@@ -643,6 +658,24 @@ const displayController = (function(gameBoardPlaceholder){
         statusDisplayDOM.textContent = message
     
     }
+
+
+    function updateScore (player1score,player2score){
+
+        const player1scoreDOM = document.querySelector('.player-one-score');
+
+        const player2scoreDOM = document.querySelector('.player-two-score');   
+        
+        
+
+        player1scoreDOM.textContent = player1score; 
+
+        player2scoreDOM.textContent = player2score; 
+
+
+
+
+    }
     
 
 
@@ -655,7 +688,7 @@ const displayController = (function(gameBoardPlaceholder){
     startGame();
 
 
-    return {updateTurnColor,removeTurnColor,updateStatus};
+    return {updateTurnColor,removeTurnColor,updateStatus,updateScore};
 
 
 })(gameBoard);
