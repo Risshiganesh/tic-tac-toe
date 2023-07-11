@@ -79,7 +79,7 @@ const gameFlow = (function () {
                 chosenGrid.marker = marker;
     
                 // console display gets updated every time a choice is made, used for debugging
-                consoleDisplay(gameBoard);
+                // consoleDisplay(gameBoard);
         
             }else{
 
