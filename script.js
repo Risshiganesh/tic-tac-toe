@@ -1,22 +1,9 @@
-//This is basically object manipulation
 
-// Put inside a module and send it to
-
-
-// let player1turn = true; // gameFlow.p depends on this, find a way to send this value to it, without keeping this variable in global namespace. Ideally should be inside updateTurnColor
-
-
-
-// put this inside a module
-//factory function
+//Factory function
 const gameBoardFactory = function(gridNumberPlaceholder){
 
 
-    console.log('create new board')
-
     let board = [];
-
-    console.log(board);
 
     for (let r = 0; r < gridNumberPlaceholder; r++) {
 
@@ -28,88 +15,42 @@ const gameBoardFactory = function(gridNumberPlaceholder){
             
     }    
     
-    
     // Factory function to create grids
     function createGrid (row,col,marker){
     
         return {row,col,marker}
     }
 
-        
-
-return {board};
+    return {board};
 
 };
 
-let gridNumber = 3; //put this in a module later
-
-let gameBoard = gameBoardFactory(gridNumber);
-
-
-// module
-function consoleDisplay (boardObj){
-
-    const boardArray = boardObj.board;
-
-    let unprocessedArray = [];
-
-    // loop count variables, value will be max col and row value
-    let colCount = '';
-
-    let rowCount = '';
-
-    // count cols and rows
-
-    boardArray.forEach(grid => {
-        
-        colCount = grid.col;
-
-        rowCount = grid.row;
-
-    })
 
 
 
-    boardArray.forEach(grid => {
-        // console.log(grid.marker); 
-        
-        unprocessedArray.push(grid.marker);
-
-        if (grid.col === colCount){
-            unprocessedArray.push("\n")
-        }
-
-        // if element.row
-    });
-
-    let processedArray = unprocessedArray.join('');
-
-    console.log(processedArray);
-    // console.log(colCount);
-
-
-
-}
-
-
-consoleDisplay(gameBoard);
-
-
-
-
-
-
-
-// COMPLETE THE FLOW AND MODULARISE EVERYTHING
 
 
 const gameFlow = (function () {
-    
-    // first create players
-    
+
+
+    let gridNumber = 3; //put this in a module later
+
+    let gameBoard = gameBoardFactory(gridNumber);
 
     let gameWon = false;
 
+    function newGameBoard(){
+
+        gameBoard = gameBoardFactory(gridNumber);
+
+    }
+
+    // sends latest gameBoard data
+    function getGameBoard () {
+
+        return gameBoard;
+
+    }
 
     const resetGameOver = function(){
         
@@ -117,30 +58,18 @@ const gameFlow = (function () {
 
     }
 
-    
-    let statusDisplay = 'START!';
-
-
+    // Factory function to create players
     const players = function (name,marker){
 
         let score = 0;
 
-
-
         const choice = function(nodeNumber){
-
-            console.log(this);
-            
-            
 
             if(!gameWon) {
 
-    
-            // displayController.updateStatus(name+" has played");
-
             let gameBoardArray = gameBoard.board;
 
-            let chosenGrid = gameBoardArray[nodeNumber];      
+            let chosenGrid = gameBoardArray[nodeNumber];    
         
             if(!(chosenGrid.marker === 'X'|| chosenGrid.marker === 'O')) {
                 
@@ -149,24 +78,32 @@ const gameFlow = (function () {
                 
                 chosenGrid.marker = marker;
     
+                // console display gets updated every time a choice is made, used for debugging
                 consoleDisplay(gameBoard);
         
             }else{
+
+
                 displayController.updateStatus('That grid is taken!');
             }
+
+            // 'this' refers to the object that is calling it
         
             gridCheck(gameBoard,this);
-    
-            // 'this' refers to this object
-            // console.log(this);
+
     
             }else{
-                console.log('Game is over!')
+
+                // console.log('Game is over!')
+                displayController.updateStatus('Click continue');
+                
+
             }
 
             displayController.updateScore(playerArray[0].score,playerArray[1].score);
+
         
-            return {statusDisplay};
+            return;
         }
 
         return {name,choice,marker,score};
@@ -216,61 +153,66 @@ const gameFlow = (function () {
 
     }
 
-    function gridCheck(gameBoard,player1){
+
+
+    // Function to filter grids
+
+    function gridCheck(gameBoard,playerPlaceholder){
         const boardArray = gameBoard.board;
     
        
+        function perpendicularLineCheck (){
+    
+            for (let index = 0; index < gridNumber; index++) {
         
-    
-        for (let index = 0; index < gridNumber; index++) {
-    
-            //row check
-            
-            let gridArray = [];
-    
-    
-            boardArray.forEach(grid => {
-            
-                if(grid.row === index ) {
-    
-                    gridArray.push(grid);
-    
-                }
+                //row check
+                
+                let rowArray = [];
+
+                let colArray = [];
+
+                const gridArrays = [rowArray,colArray]
         
         
-            });
-    
-            markerCheck(gridArray,player1);
-    
-    
-        // Column check
-            
-    
-            gridArray = [];
-    
-    
-            // console.log(player1);
-            
-    
-            boardArray.forEach(grid => {
-            
-                if(grid.col === index ) {
-    
-                    gridArray.push(grid);
-    
-                }
+                boardArray.forEach(grid => {
+                
+                    if(grid.row === index ) {
         
+                        rowArray.push(grid);
         
-            });
-    
-    
-            markerCheck(gridArray,player1);
-    
+                    }
+            
+                });
+
+        
+                // Column check
+        
+                boardArray.forEach(grid => {
+                
+                    if(grid.col === index ) {
+        
+                        colArray.push(grid);
+        
+                    }
+            
+                });
+        
+                markerCheck(gridArrays,playerPlaceholder);
+        
+            }
+
         }
+
+
+        function diagLineCheck () {
+
+            // Descending line check
     
-        function descendingLineCheck () {
-    
-            let gridArray = [];
+            let descArray = [];
+
+            let ascArray =[];
+
+            const gridArrays = [descArray,ascArray];
         
             for (let j = 0; j < gridNumber; j++) {
     
@@ -280,53 +222,40 @@ const gameFlow = (function () {
     
                     if(grid.row === j && grid.col === j){
                         
-                        gridArray.push(grid);
+                        descArray.push(grid);
                     }
                 });
                 
             }
     
-            markerCheck(gridArray,player1);
-    
-            gridArray =[];
-    
-        }
-    
-        descendingLineCheck();
+            // Ascending line check
 
-    
-    
-        function ascendingLineCheck () {
-            let gridArray = [];
-    
             // Because gridNumber is 3
+            let n = gridNumber - 1
     
-            let k = gridNumber - 1
-    
-            for (let j = 0; j < gridNumber; j++) {
+            for (let m = 0; m < gridNumber; m++) {
     
     
                 boardArray.forEach(grid => {
     
-                    if(grid.row === j &&  grid.col === k){
+                    if(grid.row === m &&  grid.col === n){
                         
-                        gridArray.push(grid);
+                        ascArray.push(grid);
     
-                        k--;
+                        n--;
                     }
                 });
-    
-    
-                
+
             }
 
-            markerCheck(gridArray,player1);
-    
-            
+            markerCheck(gridArrays,playerPlaceholder);
     
         }
+
+
+        perpendicularLineCheck ();
     
-        ascendingLineCheck();
+        diagLineCheck();
     
 
         if(!gameWon){
@@ -338,48 +267,64 @@ const gameFlow = (function () {
         
     }
     
-    
-    
-    // module
-    
-    function markerCheck(gridArrayPlaceholder,player){
-    
-        let markerCheck = [];
-    
-        gridArrayPlaceholder.forEach(grid => {
-    
-            if(grid.marker === player.marker){
-                
-                markerCheck.push(grid);
-            }
-    
-        })
-    
-        if (gridArrayPlaceholder.length === markerCheck.length) {
-    
-            displayController.updateStatus(player.name+' wins!');
 
-            player.score++;
-
-            displayController.removeTurnColor();
-
-            gameWon = true;
+    // Function to check for win condition with filtered grids
     
-            return;
+    function markerCheck(filteredGridLines,player){
     
-            //create a function to disable grid input and pop up a restart button
+
+        // let ifWin = false;
         
-        }
+
+        filteredGridLines.forEach(gridArray => {
+            
+            let markerCheck = [];
+
+            
+            if (!gameWon){ // Or else it will run twice and give two points if there are two 3 in a rows.
+
+                gridArray.forEach(grid => {
     
-        markerCheck = [];
-    
-    
+                    if(grid.marker === player.marker){
+                        
+                        markerCheck.push(grid);
+                    }
+            
+                })
+            
+                if (gridArray.length === markerCheck.length) {
+            
+                    displayController.updateStatus(player.name+' wins!');
+        
+                    player.score++;
+        
+                    displayController.removeTurnColor();
+        
+                    gameWon = true;
+
+                    displayController.updateButton();
+            
+                    return;
+            
+                    //create a function to disable grid input and pop up a restart button
+                
+                }
+
+            } else {
+
+                return;
+
+            } 
+
+        });
+
     }
     
     
     
     
-    // module
+    // Function to check for draw condition
+
     function drawCheck (boardArrayPlaceholder) {
     
         let gridArray = [];
@@ -390,10 +335,7 @@ const gameFlow = (function () {
     
                 gridArray.push(grid);
 
-                // console.log(grid.marker);
-    
-                
-                // return;
+
             }
             
     
@@ -409,7 +351,7 @@ const gameFlow = (function () {
     
     }
 
-    let p = function(playerTurn,nodeNumber){
+    let play = function(playerTurn,nodeNumber){
 
         let test = playerTurn? player1.choice(nodeNumber):player2.choice(nodeNumber);
     
@@ -417,20 +359,15 @@ const gameFlow = (function () {
     
     }
 
-
-    
-
-    
-    
     // methods that are available
-    return {p,createPlayers,resetGameOver};
+    return {play,createPlayers,resetGameOver,newGameBoard,getGameBoard};
 
 })();
 
 
 
 
-// module for DOM
+// Module for DOM
 const displayController = (function(gameBoardPlaceholder){
 
     let player1turn = true;
@@ -440,7 +377,7 @@ const displayController = (function(gameBoardPlaceholder){
 
     const startMenuScreen = document.querySelector('.start-container')
 
-    const gridAreaDOM = document.querySelector('#grid-area');
+    // const gridAreaDOM = document.querySelector('#grid-area');
 
     const player1DOM = document.querySelector('#player-one-input');
 
@@ -453,6 +390,8 @@ const displayController = (function(gameBoardPlaceholder){
     const playerOneturnContainer = document.querySelector('.player-one-container');
     
     const playerTwoturnContainer = document.querySelector('.player-two-container');
+
+    const restartButton = document.querySelector('.restart');
 
 
 
@@ -474,15 +413,7 @@ const displayController = (function(gameBoardPlaceholder){
             
             const player2NameValue = player2DOM.value;
 
-            // console.log(gridAreaValue);
-
-            // console.log(player1NameValue);
-
-            // console.log(player2NameValue);
-
             if(!player1NameValue|| !player2NameValue){
-
-                // console.log('test')
 
                 return;
 
@@ -492,8 +423,8 @@ const displayController = (function(gameBoardPlaceholder){
             
 
             // Create grid
-            
-            // CREATE PLAYERS or change player name?
+
+            // Change created player object's name when start button is clicked
 
             gameFlow.createPlayers(player1NameValue,player2NameValue);
 
@@ -513,8 +444,7 @@ const displayController = (function(gameBoardPlaceholder){
     }
 
 
-    // Gameboard display
-
+    // Create gameboard display for DOM
 
     const gameBoardArray = gameBoardPlaceholder.board;
 
@@ -530,6 +460,7 @@ const displayController = (function(gameBoardPlaceholder){
         boardDOM.appendChild(gridElement);
 
 
+
     });
 
     const gridDOM = document.querySelectorAll('.grid');
@@ -542,35 +473,34 @@ const displayController = (function(gameBoardPlaceholder){
 
     }
 
-    
-    gridDOM.forEach(grid => {
+
+    // for each grid click
+    function displayBoardDOM (){
+
+        gridDOM.forEach(grid => {
         
-        grid.addEventListener('click', function(){
+            grid.addEventListener('click', function(){
+    
+                const gameBoardArray = gameFlow.getGameBoard().board;
+                
+                const clickedGrid = grid.dataset.grid;
+    
+                gameFlow.play(player1turn,clickedGrid);
+    
+                grid.textContent = gameBoardArray[clickedGrid].marker;
+    
+            })
+        });
 
-            const gameBoardArray = gameBoard.board;
-            
-            const clickedGrid = grid.dataset.grid;
-
-            gameFlow.p(player1turn,clickedGrid);
-
-            grid.textContent = gameBoardArray[clickedGrid].marker;
-
-            // console.log(clickedGrid);
-
-            const statusDisplayDOM = document.querySelector('.status-display')
-
-
-            // console.log("TEST");
-            console.log(gameFlow.statusDisplay);
-
-       
+        return;
+    }
 
 
 
-        })
-    });
-
-
+    
+    
+    
+    // Function to manipulate DOM for each turn
 
     const updateTurnColor = (function () {
      
@@ -579,8 +509,12 @@ const displayController = (function(gameBoardPlaceholder){
             if(player1turn === false){
     
                 playerTwoturnContainer.classList.remove('your-turn');
+
+                playerTwoNameDOM.classList.remove('your-turn-border');
         
                 playerOneturnContainer.classList.add('your-turn');
+
+                playerOneNameDOM.classList.add('your-turn-border');
 
                 updateStatus(player1DOM.value+'\'s turn!')
         
@@ -589,8 +523,12 @@ const displayController = (function(gameBoardPlaceholder){
             if(player1turn === true){
         
                 playerOneturnContainer.classList.remove('your-turn');
+
+                playerOneNameDOM.classList.remove('your-turn-border');
         
                 playerTwoturnContainer.classList.add('your-turn');
+
+                playerTwoNameDOM.classList.add('your-turn-border');
 
                 updateStatus(player2DOM.value+'\'s turn!')
         
@@ -604,21 +542,20 @@ const displayController = (function(gameBoardPlaceholder){
         
     })();
 
+
+    // Function to restart game
+
     function restartGame (){
 
         const restartButtonDOM = document.querySelector('.restart-button');
     
         restartButtonDOM.addEventListener('click', function(){
-            
-            // the tricky part
-            gameBoard = gameBoardFactory(gridNumber);
-            // the tricky part
+
+            gameFlow.newGameBoard();
     
             player1turn = true;
     
             gameFlow.resetGameOver();
-    
-            // Need to clear DOM Grid and Status display textContent and also reset gameWon value to false. turn gameWon to a function expression?
     
             const gridDOM = document.querySelectorAll('.grid');
     
@@ -629,12 +566,16 @@ const displayController = (function(gameBoardPlaceholder){
             const statusDisplayDOM = document.querySelector('.status-display');
     
             statusDisplayDOM.textContent = 'START!';
+
+            restartButton.textContent = 'RESTART';
+
+            restartButton.classList.remove('continue');
     
             removeTurnColor();
 
             playerOneturnContainer.classList.add('your-turn');
 
-            // add color class to player-one-container
+            playerOneNameDOM.classList.add('your-turn-border')
             
             
         });
@@ -647,6 +588,10 @@ const displayController = (function(gameBoardPlaceholder){
         playerOneturnContainer.classList.remove('your-turn');
     
         playerTwoturnContainer.classList.remove('your-turn');
+
+        playerOneNameDOM.classList.remove('your-turn-border');
+
+        playerTwoNameDOM.classList.remove('your-turn-border');
     
     }
 
@@ -676,26 +621,79 @@ const displayController = (function(gameBoardPlaceholder){
 
 
     }
+
+
+    function updateButton () {
+
+        restartButton.textContent = 'CONTINUE'
+        restartButton.classList.add('continue');
+
+    }
     
 
-
-
-
-
-
     restartGame();
+
+    displayBoardDOM();
 
     startGame();
 
 
-    return {updateTurnColor,removeTurnColor,updateStatus,updateScore};
+    return {updateTurnColor,removeTurnColor,updateStatus,updateScore,displayBoardDOM,updateButton};
 
 
-})(gameBoard);
+})(gameFlow.getGameBoard());
 
 
 
 
+
+
+
+
+// Module for console board, used for debugging
+
+function consoleDisplay (boardObj){
+
+    const boardArray = boardObj.board;
+
+    let unprocessedArray = [];
+
+    // loop count variables, value will be max col and row value
+    let colCount = '';
+
+    let rowCount = '';
+
+    // count cols and rows
+
+    boardArray.forEach(grid => {
+        
+        colCount = grid.col;
+
+        rowCount = grid.row;
+
+    })
+
+
+
+    boardArray.forEach(grid => {
+
+        unprocessedArray.push(grid.marker);
+
+        if (grid.col === colCount){
+            unprocessedArray.push("\n")
+        }
+
+    });
+
+    let processedArray = unprocessedArray.join('');
+
+    console.log(processedArray);
+
+
+}
+
+
+consoleDisplay(gameFlow.getGameBoard());
 
 
 
